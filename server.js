@@ -7,9 +7,17 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: "*"
-}));
+app.use(
+  cors({
+    origin: "https://more-client.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+// app.use(cors({
+//   origin: "*"
+// }));
 app.use(express.json());
 
 let isConnected = false;
