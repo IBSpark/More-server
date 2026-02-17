@@ -58,6 +58,10 @@ app.use("/api/login", (req, res) =>
 app.use("/api/update", (req, res) =>
   import("./api/update.js").then((mod) => mod.default(req, res))
 );
+app.use("/api/about", (req, res) =>
+  import("./api/about.js").then((mod) => mod.default(req, res))
+);
+
 app.get('/',(req,res)=>{
     res.send({
         activeStatus: true, 
