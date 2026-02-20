@@ -1,26 +1,31 @@
 import jwt from "jsonwebtoken";
 
-export default function auth(req, res, next) {
+export default function auth(req, res) {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith("Bearer ")
-      ? authHeader.split(" ")[1]
-      : null;
+
+    const token =
+      authHeader && authHeader.startsWith("Bearer ")
+        ? authHeader.split(" ")[1]
+        : null;
 
     if (!token) {
-      return res.status(401).json({ message: "No token, authorization denied" });
+      res.status(401).json({ message: "No token, authorization denied" });
+      return null;
     }
 
     if (!process.env.JWT_SECRET) {
       console.error("JWT_SECRET missing");
-      return res.status(500).json({ message: "Server misconfiguration" });
+      res.status(500).json({ message: "Server misconfiguration" });
+      return null;
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = { id: decoded.id }; // attach user to request
-    next();
+    return { id: decoded.id };
+
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Invalid token" });
+    return null;
   }
 }

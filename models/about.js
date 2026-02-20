@@ -6,7 +6,7 @@ const aboutSchema = new mongoose.Schema(
     description: { type: String, required: true },
     version: { type: String, required: true },
     developer: { type: String, required: true },
-    imageUrl: { type: String, required: true },
+    image: { type: String },
   },
   { timestamps: true }
 );
