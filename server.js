@@ -7,10 +7,20 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  "https://more-client.vercel.app",
+  "http://localhost:3000"
+];
+
 app.use(
   cors({
-    origin: "https://more-client.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -49,11 +59,15 @@ app.use((req , res ,next) => {
 
 
 // Local routing for Vercel‑style API
-app.use("/api/signup", (req, res) =>
-  import("./api/signup.js").then((mod) => mod.default(req, res))
+app.use("/api/register", (req, res) =>
+  import("./api/auth/register.js").then((mod) => mod.default(req, res))
 );
 app.use("/api/login", (req, res) =>
-  import("./api/login.js").then((mod) => mod.default(req, res))
+  import("./api/auth/login.js").then((mod) => mod.default(req, res))
+);
+
+app.use("/api/google", (req, res) =>
+  import("./api/auth/google.js").then((mod) => mod.default(req, res))
 );
 app.use("/api/update", (req, res) =>
   import("./api/update.js").then((mod) => mod.default(req, res))

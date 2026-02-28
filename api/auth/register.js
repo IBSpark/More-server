@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
-import connectDB from "../lib/db.js";
-import User from "../models/user.js";
+import jwt from "jsonwebtoken";
+import connectDB from "../../lib/db.js";
+import User from "../../models/user.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -16,21 +17,37 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    const existingUser = await User.findOne({ email });
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
+
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = await User.create({
-      name,
-      email,
+      name: name.trim(),
+      email: normalizedEmail,
       password: hashedPassword,
     });
 
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        email: newUser.email,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
     return res.status(201).json({
-      message: "Signup successful",
+      token,
       user: {
         id: newUser._id,
         name: newUser.name,

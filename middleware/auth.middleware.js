@@ -22,7 +22,7 @@ export default function auth(req, res) {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    return { id: decoded.id };
+    return decoded; // return full payload
 
   } catch (err) {
     res.status(401).json({ message: "Invalid token" });
