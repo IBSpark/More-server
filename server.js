@@ -66,7 +66,7 @@ app.use("/api/login", (req, res) =>
   import("./api/auth/login.js").then((mod) => mod.default(req, res))
 );
 
-app.use("/api/google", (req, res) =>
+app.use("/api/auth/google", (req, res) =>
   import("./api/auth/google.js").then((mod) => mod.default(req, res))
 );
 app.use("/api/update", (req, res) =>
