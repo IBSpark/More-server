@@ -59,10 +59,10 @@ app.use((req , res ,next) => {
 
 
 // Local routing for Vercel‑style API
-app.use("/api/register", (req, res) =>
+app.use("/api/auth/register", (req, res) =>
   import("./api/auth/register.js").then((mod) => mod.default(req, res))
 );
-app.use("/api/login", (req, res) =>
+app.use("/api/auth/login", (req, res) =>
   import("./api/auth/login.js").then((mod) => mod.default(req, res))
 );
 
@@ -72,8 +72,24 @@ app.use("/api/auth/google", (req, res) =>
 app.use("/api/update", (req, res) =>
   import("./api/update.js").then((mod) => mod.default(req, res))
 );
-app.use("/api/about", (req, res) =>
-  import("./api/about.js").then((mod) => mod.default(req, res))
+app.use("/api/auth/about", (req, res) =>
+  import("./api/auth/about.js").then((mod) => mod.default(req, res))
+);
+
+app.use("/api/generate", (req, res) =>
+  import("./api/generate.js").then((mod) => mod.default(req, res))
+);
+
+app.use("/api/voices", (req, res) =>
+  import("./api/voices.js").then((mod) => mod.default(req, res))
+);
+
+app.use("/api/credits", (req, res) =>
+  import("./api/credits.js").then((mod) => mod.default(req, res))
+);
+
+app.use("/api/history", (req, res) =>
+  import("./api/history.js").then((mod) => mod.default(req, res))
 );
 
 app.get('/',(req,res)=>{
