@@ -72,8 +72,8 @@ app.use("/api/auth/google", (req, res) =>
 app.use("/api/update", (req, res) =>
   import("./api/update.js").then((mod) => mod.default(req, res))
 );
-app.use("/api/auth/about", (req, res) =>
-  import("./api/auth/about.js").then((mod) => mod.default(req, res))
+app.use("/api/about", (req, res) =>
+  import("./api/about.js").then((mod) => mod.default(req, res))
 );
 
 app.use("/api/generate", (req, res) =>
