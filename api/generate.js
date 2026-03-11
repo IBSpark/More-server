@@ -2,7 +2,7 @@ import textToSpeech from "@google-cloud/text-to-speech";
 import jwt from "jsonwebtoken";
 import connectDB from "../lib/db.js";
 import User from "../models/user.js";
-import History from "../models/History.js";
+import History from "../models/history.js";
 
 const client = new textToSpeech.TextToSpeechClient({
   credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
@@ -48,16 +48,21 @@ export default async function handler(req, res) {
 
     const [response] = await client.synthesizeSpeech(request);
 
+    // deduct credits
     user.credits -= cost;
     await user.save();
 
+    // save history
     await History.create({
       userId: user._id,
       text,
       voice: voiceName,
+      charactersUsed: text.length,
     });
 
     res.setHeader("Content-Type", "audio/mpeg");
+    res.setHeader("Cache-Control", "no-store");
+
     return res.status(200).send(response.audioContent);
 
   } catch (error) {

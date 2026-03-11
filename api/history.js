@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import connectDB from "../lib/db.js";
-import History from "../models/History.js";
+import History from "../models/history.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
